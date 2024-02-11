@@ -1,0 +1,4 @@
+npx create-react-app {NameOfProject}
+npm init -y
+npm i express
+npm i mongoose
