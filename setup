@@ -2,3 +2,15 @@ npx create-react-app {NameOfProject}
 npm init -y
 npm i express
 npm i mongoose
+
+Task Manager Application (Intermediate):
+Description: Build a task manager application where users can create, update, and delete tasks.
+Tasks can have due dates, priority levels, and labels. Include authentication to allow users to have their own task lists.
+Tech Stack: MongoDB, Express.js, React, Node.js (MERN stack), JWT for authentication.
+
+////// BACKEND
+1. Create db.js and index.js in which you need to connect mongoose to the node.js...
+mongoose is basically a orm library of oo js library which connects node.js javascript runtime environment to mongodb.
+2. Now basically we have a Models folder in which we have created Schemas which are essential for our data.
+3. Create a Middleware Folder in which you can validate the user using JWT token.
+4. 
