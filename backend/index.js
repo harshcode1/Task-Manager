@@ -5,16 +5,16 @@ connectToMongo();
 
 const app = express()
 // We changed the port because we wanted to run react.js on the 3000 port....
-const port = 7000
+const port = 9000
 var cors = require('cors')
-   
+
 app.use(express.json())
 app.use(cors())
 
-// Available Routes
-// app.use('/api/auth',require('./routes/auth'))
-// app.use('/api/notes',require('./routes/notes'))
 
+// // Available Routes
+app.use('/api/userAuth',require('./routes/userAuth'))
+// app.use('/api/userNotes',require('./routes/userNotes'))
 
 
 app.get('/', (req, res) => {
