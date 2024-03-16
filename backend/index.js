@@ -14,7 +14,7 @@ app.use(cors())
 
 // // Available Routes
 app.use('/api/userAuth',require('./routes/userAuth'))
-// app.use('/api/userNotes',require('./routes/userNotes'))
+app.use('/api/userTask',require('./routes/userTask'))
 
 
 app.get('/', (req, res) => {
