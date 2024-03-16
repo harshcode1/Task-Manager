@@ -4,7 +4,7 @@ const { body, validationResult } = require('express-validator');
 const fetchUser = require('../middleware/fetchUser');
 const Task = require('../models/task'); // Changed from 'task' to 'Task'
 
-router.post('/getAllTasks', fetchUser, async (req, res) => {
+router.get('/getAllTasks', fetchUser, async (req, res) => {
     try {
         const tasks = await Task.find({ user: req.user.id });
         res.json(tasks);
@@ -14,12 +14,12 @@ router.post('/getAllTasks', fetchUser, async (req, res) => {
     }
 });
 
-router.post('/createtask', [
+router.post('/createtask', fetchUser , [
     body('title', 'It should contain at least 2 Characters').isLength({ min: 2 }),
     body('description', 'It should contain at least 5 Characters').isLength({ min: 5 }),
-    body('dueDate', 'There should be a valid date and it should not be in the past').isDate().toDate(),
+    body('dueDate', 'There should be a valid date and it should not be in the past').isDate(),
 ], async (req, res) => {
-    try {
+ 
         const { title, description, dueDate, PriorityLevel, Labels } = req.body;
         const result = validationResult(req);
         if (!result.isEmpty()) {
@@ -31,15 +31,12 @@ router.post('/createtask', [
         });
         const savedTask = await newTask.save(); // Await the save operation
         res.json(savedTask);
-    } catch (e) {
-        console.log(e);
-        return res.status(400).send("Some Error " + e + " has been Occurred");
-    }
+ 
 });
 
 //Update a TASK
 router.put('/updateTask/:id',fetchUser, async(req,res) => {
-    try{
+    
         const {title, description, dueDate, PriorityLevel, Labels} = req.body;
         const newTask = {};
         if(title) newTask.title = title;
@@ -51,35 +48,31 @@ router.put('/updateTask/:id',fetchUser, async(req,res) => {
         let Existingtask = await Task.findById(req.params.id);
         if(!Existingtask) res.status(404).send("No user exists");
 
-        if(Existingtask.user.toString() !== req.user.id){
+        if(Existingtask.user.toString() != req.user.id){
             return res.status(401).send("Invalid")
         }
 
         Existingtask = await Task.findByIdAndUpdate(req.params.id,{$set: newTask},{new: true})
-    }catch(e){
-        console.log(e.message);
-        return res.status(401).send("Some Error Occured");
-    }
+        res.json({Existingtask})
 })
 
-//Delete a Task
-router.delete('/deleteTask/:id', fetchUser , async (req,res) =>{
-    try{
-        const {title, description, dueDate, PriorityLevel, Labels} = req.body;
+// Delete a Task
+router.delete('/deleteTask/:id', fetchUser , async (req, res) => {
+    try {
+        let existingTask = await Task.findById(req.params.id);
+        if (!existingTask) return res.status(404).send("Task not found");
 
-        const Existingtask = await Task.findById(req.param.id);
-        if(!Existingtask) res.status(404).send("No user exists");
-
-        if(Existingtask.user.toString() !== req.user.id){
+        if(existingTask.user.toString() !== req.user.id){
             return res.status(401).send("Invalid")
         }
 
-        Existingtask = await Task.findByIdAndDelete(req.params.id);
-        res.json({Deleted:"Successfully Deleted"});
-    }catch(e){
+        existingTask = await Task.findByIdAndDelete(req.params.id);
+        res.json({ deleted: "Successfully Deleted" });
+    } catch (e) {
         console.log(e.message);
-        return res.status(400).send("Some Error Occured");
+        return res.status(500).send("Server Error");
     }
-})
+});
+
 
 module.exports = router;
