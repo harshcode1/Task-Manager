@@ -1,4 +1,5 @@
 import './App.css';
+import Display from './components/Display';
 import Navbar from './components/Navbar';
 
 
@@ -6,7 +7,10 @@ import Navbar from './components/Navbar';
 // => Frontend is left Backend Donee...
 function App() {
   return (
+    <>
     <Navbar/>
+    <Display/>
+    </>
   );
 }
 
